@@ -1,0 +1,11 @@
+{
+  "model_name": "Example Model (No model trained yet)",
+  "timestamp": "2023-01-01 00:00:00",
+  "metrics": {
+    "R²": 0.0,
+    "MSE": 0.0,
+    "RMSE": 0.0,
+    "MAE": 0.0
+  },
+  "all_metrics": {}
+}
