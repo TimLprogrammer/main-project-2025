@@ -1,81 +1,81 @@
 # Weather Forecast & Model Management
 
-Een geautomatiseerd systeem voor weergebaseerde foutvoorspelling, ontworpen om gemakkelijk te begrijpen en te beheren te zijn.
+An automated system for weather-based fault prediction, designed to be easy to understand and manage.
 
-## Overzicht
+## Overview
 
-Dit project is een interactieve Streamlit-applicatie die weergegevens verzamelt, verwerkt en gebruikt om foutmeldingen te voorspellen op basis van weeromstandigheden. Het systeem traint machine learning modellen en genereert voorspellingen die in een gebruiksvriendelijke interface worden weergegeven.
+This project is an interactive Streamlit application that collects, processes, and uses weather data to predict fault notifications based on weather conditions. The system trains machine learning models and generates predictions that are displayed in a user-friendly interface.
 
-## Functionaliteiten
+## Features
 
-- **Gegevens verzamelen:** Haalt weervoorspellingen en historische weergegevens op via API's en laadt foutmeldingen uit Excel-bestanden.
-- **Gegevens verwerken:** Reinigt de ruwe gegevens, voegt nuttige kenmerken toe en aggregeert gegevens tot dagelijkse samenvattingen.
-- **Fouten classificeren:** Gebruikt regels en machine learning om foutmeldingen te categoriseren.
-- **Modellen trainen:** Traint meerdere machine learning modellen om fouten te voorspellen op basis van weer- en tijdkenmerken.
-- **Voorspellingen genereren:** Gebruikt de getrainde modellen om toekomstige fouten te voorspellen op basis van de nieuwste weervoorspellingen.
-- **Resultaten visualiseren:** Toont voorspellingen, modelprestaties en gedetailleerde grafieken in een interactieve app.
-- **Regelmatig hertrainen:** Werkt gegevens bij en hertraint modellen om in de loop van de tijd nauwkeurig te blijven.
+- **Data Collection:** Fetches weather forecasts and historical weather data via APIs and loads fault notifications from Excel files.
+- **Data Processing:** Cleans the raw data, adds useful features, and aggregates data into daily summaries.
+- **Fault Classification:** Uses rules and machine learning to categorize fault notifications.
+- **Model Training:** Trains multiple machine learning models to predict faults based on weather and time features.
+- **Forecast Generation:** Uses the trained models to predict future faults based on the latest weather forecasts.
+- **Results Visualization:** Shows predictions, model performance, and detailed plots in an interactive app.
+- **Regular Retraining:** Updates data and retrains models to maintain accuracy over time.
 
-## Installatie
+## Installation
 
-1. Clone de repository:
+1. Clone the repository:
    ```
    git clone https://github.com/yourusername/weather_forecast_app.git
    cd weather_forecast_app
    ```
 
-2. Installeer de vereiste packages:
+2. Install the required packages:
    ```
    pip install -r requirements.txt
    ```
 
-## Gebruik
+## Usage
 
-Start de Streamlit-app:
+Start the Streamlit app:
 ```
 streamlit run streamlit_app.py
 ```
 
-De app heeft drie hoofdsecties:
+The app has three main sections:
 
-1. **Latest Predictions:** Voer de forecast pipeline uit om de nieuwste voorspellingen te genereren en te bekijken.
-2. **Models:** Upload nieuwe foutmeldingsgegevens en hertrain de modellen.
-3. **Explanation:** Bekijk gedetailleerde uitleg over hoe het systeem werkt.
+1. **Latest Predictions:** Run the forecast pipeline to generate and view the latest predictions.
+2. **Models:** Upload new fault notification data and retrain the models.
+3. **Explanation:** View detailed explanations about how the system works.
 
-## Mapstructuur
+## Directory Structure
 
 - **`data/script/`**
-  - `forecast.py`: Haalt weervoorspellingsgegevens op.
-  - `historical.py`: Haalt historische weergegevens op.
-  - `process_daily_weather.py`: Reinigt en verrijkt weergegevens.
-  - `classifie_vks.py`: Classificeert foutmeldingen.
-  - `result.py`: Maakt visualisaties van foutgegevens.
+  - `forecast.py`: Fetches weather forecast data.
+  - `historical.py`: Fetches historical weather data.
+  - `process_daily_weather.py`: Cleans and enriches weather data.
+  - `classifie_vks.py`: Classifies fault notifications.
+  - `result.py`: Creates visualizations of fault data.
 
 - **`data/`**
-  - `update.py`: Werkt datasets bij en activeert hertraining.
-  - `csv-api/` en `csv-daily/`: Slaan ruwe en verwerkte weergegevens op.
-  - `notifications/`: Bevat Excel-bestanden met foutmeldingen.
+  - `update.py`: Updates datasets and triggers retraining.
+  - `csv-api/` and `csv-daily/`: Store raw and processed weather data.
+  - `notifications/`: Contains fault notification Excel files.
 
 - **`predictions/`**
-  - `forecast.py`: Genereert foutvoorspellingen met getrainde modellen.
-  - `cooling.py` en `heating.py`: Trainen, optimaliseren, evalueren en slaan modellen op.
-  - `best-model/`: Slaat de beste modellen en hun metrics op.
-  - `plots/`: Bevat visualisaties van modelprestaties.
+  - `forecast.py`: Generates fault forecasts using trained models.
+  - `cooling.py` and `heating.py`: Train, optimize, evaluate, and save models.
+  - `best-model/`: Stores the best models and their metrics.
+  - `plots/`: Contains visualizations of model performance.
 
 - **`streamlit/`**
-  - `main.py`: De app-interface om de pipeline uit te voeren, modellen te hertrainen en resultaten te bekijken.
+  - `main.py`: The app interface to run the pipeline, retrain models, and view results.
 
 ## Deployment
 
-Deze app kan worden gedeployed op Streamlit Cloud:
+This app can be deployed on Streamlit Cloud:
 
-1. Push de code naar een GitHub repository.
-2. Ga naar [Streamlit Cloud](https://streamlit.io/cloud).
-3. Koppel je GitHub-account en selecteer de repository.
-4. Stel `streamlit_app.py` in als het hoofdbestand.
-5. Klik op "Deploy".
+1. Push the code to a GitHub repository.
+2. Go to [Streamlit Cloud](https://streamlit.io/cloud).
+3. Connect your GitHub account and select the repository.
+4. Set `streamlit_app.py` as the main file.
+5. Click "Deploy".
 
-## Vereisten
+## Requirements
 
 - Python 3.7+
 - Streamlit
@@ -90,6 +90,6 @@ Deze app kan worden gedeployed op Streamlit Cloud:
 - Optuna
 - OpenPyXL
 
-## Licentie
+## License
 
 [MIT](LICENSE)

@@ -116,40 +116,40 @@ def preprocess_data(df, target_col='fault_count'):
 
     # Extract date features
     if 'date' in df.columns:
-        df['dag'] = df['date'].dt.day
+        df['day'] = df['date'].dt.day
         df['week'] = df['date'].dt.isocalendar().week
-        df['maand'] = df['date'].dt.month
-        df['jaar'] = df['date'].dt.year
-        df['weekdag'] = df['date'].dt.dayofweek
-        df['is_weekend'] = df['weekdag'].apply(lambda x: 1 if x >= 5 else 0)
-        df['kwartaal'] = df['date'].dt.quarter
-        df['dag_van_jaar'] = df['date'].dt.dayofyear
-        df['week_van_jaar'] = df['date'].dt.isocalendar().week
+        df['month'] = df['date'].dt.month
+        df['year'] = df['date'].dt.year
+        df['weekday'] = df['date'].dt.dayofweek
+        df['is_weekend'] = df['weekday'].apply(lambda x: 1 if x >= 5 else 0)
+        df['quarter'] = df['date'].dt.quarter
+        df['day_of_year'] = df['date'].dt.dayofyear
+        df['week_of_year'] = df['date'].dt.isocalendar().week
 
     # Add season if not present
-    if 'seizoen' not in df.columns:
-        df['seizoen'] = df['maand'].apply(lambda x: 'winter' if x in [12, 1, 2] else
-                                  'lente' if x in [3, 4, 5] else
-                                  'zomer' if x in [6, 7, 8] else 'herfst')
+    if 'season' not in df.columns:
+        df['season'] = df['month'].apply(lambda x: 'winter' if x in [12, 1, 2] else
+                                  'spring' if x in [3, 4, 5] else
+                                  'summer' if x in [6, 7, 8] else 'fall')
 
     # Create derived temperature features if they exist
-    if 'temperatuur_min' in df.columns and 'temperatuur_max' in df.columns:
-        df['temp_range'] = df['temperatuur_max'] - df['temperatuur_min']
+    if 'temperature_min' in df.columns and 'temperature_max' in df.columns:
+        df['temp_range'] = df['temperature_max'] - df['temperature_min']
 
-    if 'temperatuur_avg' in df.columns:
+    if 'temperature_avg' in df.columns:
         # Rolling statistics over temperature (7-day window)
-        df['temp_avg_7d_mean'] = df['temperatuur_avg'].rolling(window=7, min_periods=1).mean()
-        df['temp_avg_7d_std'] = df['temperatuur_avg'].rolling(window=7, min_periods=1).std().fillna(0)
-        df['temp_avg_7d_min'] = df['temperatuur_avg'].rolling(window=7, min_periods=1).min()
-        df['temp_avg_7d_max'] = df['temperatuur_avg'].rolling(window=7, min_periods=1).max()
+        df['temp_avg_7d_mean'] = df['temperature_avg'].rolling(window=7, min_periods=1).mean()
+        df['temp_avg_7d_std'] = df['temperature_avg'].rolling(window=7, min_periods=1).std().fillna(0)
+        df['temp_avg_7d_min'] = df['temperature_avg'].rolling(window=7, min_periods=1).min()
+        df['temp_avg_7d_max'] = df['temperature_avg'].rolling(window=7, min_periods=1).max()
 
         # Temperature variation indicators
-        df['temp_change'] = df['temperatuur_avg'].diff().fillna(0)
+        df['temp_change'] = df['temperature_avg'].diff().fillna(0)
         df['temp_acc'] = df['temp_change'].diff().fillna(0)  # Acceleration in temperature change
 
         # Extreme temperature indicators
-        df['extreme_temp'] = ((df['temperatuur_avg'] > df['temperatuur_avg'].quantile(0.95)) |
-                               (df['temperatuur_avg'] < df['temperatuur_avg'].quantile(0.05))).astype(int)
+        df['extreme_temp'] = ((df['temperature_avg'] > df['temperature_avg'].quantile(0.95)) |
+                               (df['temperature_avg'] < df['temperature_avg'].quantile(0.05))).astype(int)
 
     # Remove any lag features or other features derived from target column
     columns_to_drop = [col for col in df.columns if target_col in col.lower() and col != target_col]
@@ -630,9 +630,9 @@ def visualize_results(y_test, predictions, metrics, save_path):
         plt.subplot(2, 3, i+1)
         plt.scatter(y_test, y_pred, alpha=0.5)
         plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-        plt.title(f"{name} - Werkelijk vs. Voorspeld (R² = {metrics[name]['R²']:.4f})")
-        plt.xlabel('Werkelijk')
-        plt.ylabel('Voorspeld')
+        plt.title(f"{name} - Actual vs. Predicted (R² = {metrics[name]['R²']:.4f})")
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
         plt.grid(True)
 
     plt.tight_layout()
@@ -771,66 +771,66 @@ def add_temporal_features(df):
     df = df.copy()
 
     # 1. Improved cyclical time features
-    df['jaar_sin'] = np.sin(2 * np.pi * df['maand'] / 12)
-    df['jaar_cos'] = np.cos(2 * np.pi * df['maand'] / 12)
-    df['week_sin'] = np.sin(2 * np.pi * df['weekdag'] / 7)
-    df['week_cos'] = np.cos(2 * np.pi * df['weekdag'] / 7)
+    df['year_sin'] = np.sin(2 * np.pi * df['month'] / 12)
+    df['year_cos'] = np.cos(2 * np.pi * df['month'] / 12)
+    df['week_sin'] = np.sin(2 * np.pi * df['weekday'] / 7)
+    df['week_cos'] = np.cos(2 * np.pi * df['weekday'] / 7)
 
     # Day of the year cyclical features
-    if 'dag_van_jaar' in df.columns:
-        df['dag_van_jaar_sin'] = np.sin(2 * np.pi * df['dag_van_jaar'] / 365.25)
-        df['dag_van_jaar_cos'] = np.cos(2 * np.pi * df['dag_van_jaar'] / 365.25)
+    if 'day_of_year' in df.columns:
+        df['day_of_year_sin'] = np.sin(2 * np.pi * df['day_of_year'] / 365.25)
+        df['day_of_year_cos'] = np.cos(2 * np.pi * df['day_of_year'] / 365.25)
 
     # 2. Extended temperature and humidity seasonal interactions
-    if 'temperatuur_avg' in df.columns:
+    if 'temperature_avg' in df.columns:
         # Basic interactions
-        df['temp_seizoen'] = df['temperatuur_avg'] * df['jaar_sin']
-        df['temp_seizoen_cos'] = df['temperatuur_avg'] * df['jaar_cos']
+        df['temp_season'] = df['temperature_avg'] * df['year_sin']
+        df['temp_season_cos'] = df['temperature_avg'] * df['year_cos']
 
         # Interactions with min/max temperature
-        if 'temperatuur_min' in df.columns and 'temperatuur_max' in df.columns:
-            df['temp_range_seizoen'] = (df['temperatuur_max'] - df['temperatuur_min']) * df['jaar_sin']
+        if 'temperature_min' in df.columns and 'temperature_max' in df.columns:
+            df['temp_range_season'] = (df['temperature_max'] - df['temperature_min']) * df['year_sin']
 
         # Quadratic temperature effects per season
-        df['temp_squared'] = df['temperatuur_avg'] ** 2
-        df['temp_squared_seizoen'] = df['temp_squared'] * df['jaar_sin']
+        df['temp_squared'] = df['temperature_avg'] ** 2
+        df['temp_squared_season'] = df['temp_squared'] * df['year_sin']
 
-    if 'luchtvochtigheid_avg' in df.columns:
-        df['vocht_seizoen'] = df['luchtvochtigheid_avg'] * df['jaar_sin']
-        df['vocht_seizoen_cos'] = df['luchtvochtigheid_avg'] * df['jaar_cos']
+    if 'humidity_avg' in df.columns:
+        df['humidity_season'] = df['humidity_avg'] * df['year_sin']
+        df['humidity_season_cos'] = df['humidity_avg'] * df['year_cos']
 
         # Temperature-humidity interactions
-        if 'temperatuur_avg' in df.columns:
-            df['temp_vocht_interactie_seizoen'] = df['temperatuur_avg'] * df['luchtvochtigheid_avg'] * df['jaar_sin']
+        if 'temperature_avg' in df.columns:
+            df['temp_humidity_interaction_season'] = df['temperature_avg'] * df['humidity_avg'] * df['year_sin']
 
     # 3. Advanced rolling window features with different window sizes
-    if 'temperatuur_avg' in df.columns:
+    if 'temperature_avg' in df.columns:
         # Different window sizes for different patterns
         for window in [3, 7, 14]:
             # Rolling statistics for temperature
-            df[f'temp_avg_{window}d'] = df['temperatuur_avg'].rolling(window=window, min_periods=1).mean()
-            df[f'temp_avg_{window}d_std'] = df['temperatuur_avg'].rolling(window=window, min_periods=1).std()
-            df[f'temp_avg_{window}d_max'] = df['temperatuur_avg'].rolling(window=window, min_periods=1).max()
-            df[f'temp_avg_{window}d_min'] = df['temperatuur_avg'].rolling(window=window, min_periods=1).min()
+            df[f'temp_avg_{window}d'] = df['temperature_avg'].rolling(window=window, min_periods=1).mean()
+            df[f'temp_avg_{window}d_std'] = df['temperature_avg'].rolling(window=window, min_periods=1).std()
+            df[f'temp_avg_{window}d_max'] = df['temperature_avg'].rolling(window=window, min_periods=1).max()
+            df[f'temp_avg_{window}d_min'] = df['temperature_avg'].rolling(window=window, min_periods=1).min()
 
             # Temperature trends
             df[f'temp_trend_{window}d'] = df[f'temp_avg_{window}d'] - df[f'temp_avg_{window}d'].shift(1)
 
-    if 'luchtvochtigheid_avg' in df.columns:
+    if 'humidity_avg' in df.columns:
         # Rolling statistics for humidity
         for window in [3, 7]:
-            df[f'vocht_avg_{window}d'] = df['luchtvochtigheid_avg'].rolling(window=window, min_periods=1).mean()
-            df[f'vocht_trend_{window}d'] = df[f'vocht_avg_{window}d'] - df[f'vocht_avg_{window}d'].shift(1)
+            df[f'humidity_avg_{window}d'] = df['humidity_avg'].rolling(window=window, min_periods=1).mean()
+            df[f'humidity_trend_{window}d'] = df[f'humidity_avg_{window}d'] - df[f'humidity_avg_{window}d'].shift(1)
 
     # 4. Season specific temperature trends
-    if 'temperatuur_avg' in df.columns:
-        for seizoen in df['seizoen'].unique():
-            mask = df['seizoen'] == seizoen
-            df.loc[mask, f'temp_trend_{seizoen}'] = df.loc[mask, 'temperatuur_avg'].diff()
+    if 'temperature_avg' in df.columns:
+        for season_val in df['season'].unique():
+            mask = df['season'] == season_val
+            df.loc[mask, f'temp_trend_{season_val}'] = df.loc[mask, 'temperature_avg'].diff()
 
     # 5. Weekend-temperature interactions
-    if 'is_weekend' in df.columns and 'temperatuur_avg' in df.columns:
-        df['weekend_temp'] = df['is_weekend'] * df['temperatuur_avg']
+    if 'is_weekend' in df.columns and 'temperature_avg' in df.columns:
+        df['weekend_temp'] = df['is_weekend'] * df['temperature_avg']
 
     # Fill missing values
     return df.fillna(0)
@@ -888,12 +888,12 @@ def main():
         logger.error(f"Error: Target column '{target_col}' not found in dataset.")
         return
 
-    # First preprocess data to create basic features including weekdag
+    # First preprocess data to create basic features including weekday
     logger.info("Performing data preprocessing and feature engineering...")
     processed_data = preprocess_data(data, target_col='fault_count')
     logger.info(f"After preprocessing: {processed_data.shape[0]} rows, {processed_data.shape[1]} columns")
 
-    # Then add temporal features that depend on weekdag
+    # Then add temporal features that depend on weekday
     logger.info("Adding temporal features...")
     processed_data = add_temporal_features(processed_data)
 
