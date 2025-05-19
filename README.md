@@ -20,8 +20,8 @@ This project is an interactive Streamlit application that collects, processes, a
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/weather_forecast_app.git
-   cd weather_forecast_app
+   git clone https://github.com/yourusername/main-project-2025.git
+   cd main-project-2025
    ```
 
 2. Install the required packages:
@@ -64,16 +64,6 @@ The app has three main sections:
 
 - **`streamlit/`**
   - `main.py`: The app interface to run the pipeline, retrain models, and view results.
-
-## Deployment
-
-This app can be deployed on Streamlit Cloud:
-
-1. Push the code to a GitHub repository.
-2. Go to [Streamlit Cloud](https://streamlit.io/cloud).
-3. Connect your GitHub account and select the repository.
-4. Set `streamlit_app.py` as the main file.
-5. Click "Deploy".
 
 ## Requirements
 
